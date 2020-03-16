@@ -2,12 +2,22 @@
 #include <string>
 #include "btree.h"
 #include "node.h"
+#include <algorithm>
 using namespace std;
 
 
 Btree::Btree()
 {
 	this->root = NULL;
+	this->left = NULL;
+	this->right = NULL;
+}
+
+Btree::Btree(Node* root, Node* left, Node* right)
+{
+	this->root = root;
+	this->left = left;
+	this->right = right;
 }
 
 Btree::~Btree()
@@ -15,65 +25,159 @@ Btree::~Btree()
 	delete this->root;
 }
 
-
-bool Btree::search(int key)
+//This function inserts an element in binary tree.
+void Btree::insert(int key)
 {
-
+	Node *n = new Node;
+	Node* parent;
+	n->key = key;
+	n->left = NULL;
+	n->right = NULL;
+	parent = NULL;
+	if (root == 0)
+	{
+		root = n;
+	}
+	else
+	{
+		Node* current;
+		current = root;
+		while (current != 0)
+		{
+			parent = current;
+			if (n->key > current->key)
+				current = current->right;
+			else
+				current = current->left;
+		}
+		if (n->key < parent->key)
+			parent->left = n;
+		else
+			parent->right = n;
+	}
 }
 
-bool Btree::insert(int key, Node tree)
+bool Btree::remove(int key)
 {
-	//daca este primul element de adaugat, el va fi radacina
-	if (this->root = NULL)
-	{
-		Node* n=new Node();
-		n->key = key;
-		n->left = NULL;
-		n->right = NULL;
-		n->lvl = 1;
-		this->root = n;
-		return true;
-	}
-	else if(search(tree.key))
-	{
-
-	}
 	return false;
 }
 
-bool Btree::dellete(int key, Node tree)
+/* The inorder function:
+1. Check if the current node is empty or null.
+2. Traverse the left subtree by recursively calling the in-order function.
+3. Display the data part of the root (or current node).
+4. Traverse the right subtree by recursively calling the in-order function */
+
+void Btree::print_inorder()
 {
-	return false;
+	inorder(root);
 }
 
-string Btree::inorder(Node n)
-{
 
+void Btree::inorder(Node *n)
+{
+	if (n != nullptr)
+	{
+		if (n->left) inorder(n->left);
+		cout << " " << n->key << " ";
+		if (n->right) inorder(n->right);
+	}
+	else
+		return;
 }
 
-string Btree::preorder(Node n)
-{
+/* The preorder function:
+1. Check if the current node is empty or null.
+2. Display the data part of the root (or current node).
+3. Traverse the left subtree by recursively calling the pre-order function.
+4. Traverse the right subtree by recursively calling the pre-order function. */
 
+void Btree::print_preorder()
+{
+	preorder(root);
 }
 
-string Btree::postorder(Node n)
+void Btree::preorder(Node *n)
 {
-
+	if (n != nullptr)
+	{
+		cout << " " << n->key << " ";
+		if (n->left) preorder(n->left);
+		if (n->right) preorder(n->right);
+	}
+	else
+		return;
 }
 
-int Btree::countNodes(Node n)
-{
+/* The postorder function:
+1. Check if the current node is empty or null.
+2. Traverse the left subtree by recursively calling the post-order function.
+3. Traverse the right subtree by recursively calling the post-order function.
+4. Display the data part of the root (or current node). */
 
+void Btree::print_postorder()
+{
+	postorder(root);
 }
 
-int Btree::countEdges(Node n)
+void Btree::postorder(Node *n)
 {
-
+	if (n != nullptr)
+	{
+		if (n->left) postorder(n->left);
+		if (n->right) postorder(n->right);
+		cout << " " << n->key << " ";
+	}
+	else
+		return;
 }
 
-int Btree::height(Node n)
+//This function counts, how many nodes are in the tree.
+int Btree::countNodes(Node *n)
 {
-	return n.lvl;
-	//return row;
+	int count = 1;
+	if (n == nullptr)
+		return 0;
+	else
+	{
+		count += countNodes(n->left);
+		count += countNodes(n->right);
+	}
+	return count;
 }
 
+int Btree::countNodes()
+{
+	return countNodes(root);
+}
+
+//This function counts, how many edges are in the tree.
+int Btree::countEdges(Node *n)
+{
+	if (n == nullptr)
+		return 0;
+	else
+		return countNodes() - 1;
+}
+
+int Btree::countEdges()
+{
+	return countEdges(root);
+}
+
+//This function shows the height of a tree.
+int Btree::height(Node *n)
+{
+	if (n == nullptr)
+	{
+		return -1;
+	}
+	int left = height(n->left);
+	int right = height(n->right);
+	return (1 + std::max(left, right));
+}
+
+int Btree::height()
+{
+	return height(root);
+}

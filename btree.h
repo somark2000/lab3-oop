@@ -1,43 +1,49 @@
 #pragma once
 #include "node.h"
-using namespace std;
+#include <algorithm>
 
 class Btree
 {
 	friend class Node;
 private:
 	Node* root;//radacina arborelui
+	Node* left;
+	Node* right;
 public:
 	//constructor
 	Btree();
+	Btree(Node* root, Node* left, Node* right);
 
 	//destuctor
 	~Btree();
 
-	//searches a node in the three
-	bool search(int key);
-
 	//adds a new node to the tree
-	bool insert(int key,Node tree);
-
+	void insert(int key);
+	
 	//deletes a node
-	bool dellete(int key, Node tree);
+	bool remove(int key);
 
-	//
-	string inorder(Node n);
+	//inorder
+	void print_inorder();
+	void inorder(Node *n);
 
-	//
-	string preorder(Node n);
+	//preorder
+	void print_preorder();
+	void preorder(Node* n);
 
-	//
-	string postorder(Node n);
+	//postorder
+	void print_postorder();
+	void postorder(Node *n);
 
 	//counts the nodes
-	int countNodes(Node n);
+	int countNodes(Node *n);
+	int countNodes();
 
 	//counts the edges
-	int countEdges(Node n);
+	int countEdges(Node *n);
+	int countEdges();
 
-	//returns the height of ??(a node in)?? the binary tree
-	int height(Node n);
+	//returns the height of a tree
+	int height(Node *n);
+	int height();
 };
