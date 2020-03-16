@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 #include "btree.h"
 #include "node.h"
-#include <algorithm>
 using namespace std;
 
 
@@ -20,29 +20,28 @@ Btree::Btree(Node* root, Node* left, Node* right)
 	this->right = right;
 }
 
+
 Btree::~Btree()
 {
 	delete this->root;
 }
 
-//This function inserts an element in binary tree.
 void Btree::insert(int key)
 {
-	Node *n = new Node;
+	Node* n = new Node;
 	Node* parent;
 	n->key = key;
 	n->left = NULL;
 	n->right = NULL;
 	parent = NULL;
-	if (root == 0)
+	if (root == NULL)
 	{
 		root = n;
 	}
 	else
 	{
-		Node* current;
-		current = root;
-		while (current != 0)
+		Node* current = root;
+		while (current != NULL)
 		{
 			parent = current;
 			if (n->key > current->key)
@@ -57,10 +56,111 @@ void Btree::insert(int key)
 	}
 }
 
-bool Btree::remove(int key)
+void Btree::do_remove(int key)
 {
-	return false;
+	remove(key, root);
 }
+
+Node* Btree::minValueNode(Node* n)
+{
+	Node* current = n;
+	Node* parent=current;
+	while (current->right != NULL)
+	{
+		parent = current;
+		current = current->right;
+	}
+	parent->right = NULL;
+	return current;
+}
+
+void Btree::remove(int key,Node* n)
+{
+	if (root == NULL) //arborele e gol
+	{
+		cout << "The tree is empty\n";
+		return;
+	}
+	else
+	{   //cautam nodul
+		Node* current = root;
+		Node* parent = NULL;
+		while (current != NULL and key != current->key)
+		{
+			parent = current;
+			if (key > current->key)
+				current = current->right;
+			else
+				current = current->left;
+		}
+		if (key == current->key) //daca l-am gasit
+		{
+			if (current->left == NULL and current->right == NULL)//nu are copii
+			{
+				if (key < parent->key)
+					parent->left = NULL;
+				else
+					parent->right = NULL;
+				delete current;
+			}
+			else if(current->left == NULL or current->right == NULL)// are un copil
+			{
+				if (current->left == NULL)
+					parent->left = current->right;
+				else
+					parent->right = current->left;
+				delete current;
+			}
+			else
+			{
+				Node* temp = minValueNode(current->right);
+				current->key = temp->key;
+				delete temp;
+			}
+		}
+		else //nu l-am, gasit
+		{
+			cout << "There is no such element to be removed\n";
+			return;
+		}
+	}
+
+	/*
+	//cautam elementul de sters
+	if (key < root->key)
+		remove(key,root->left); 
+	else if (key > root->key)
+		remove(key,root->right);
+	else
+	{
+		// daca are cel mult un fiu 
+		if (root->left == NULL)
+		{
+			Node* temp = root->right;
+			free(root);
+			return temp;
+		}
+		else if (root->right == NULL)
+		{
+			struct node* temp = root->left;
+			free(root);
+			return temp;
+		}
+
+		// node with two children: Get the inorder successor (smallest 
+		// in the right subtree) 
+		struct node* temp = minValueNode(root->right);
+
+		// Copy the inorder successor's content to this node 
+		root->key = temp->key;
+
+		// Delete the inorder successor 
+		root->right = deleteNode(root->right, temp->key);
+	}*/
+
+	
+}
+
 
 /* The inorder function:
 1. Check if the current node is empty or null.
@@ -74,13 +174,13 @@ void Btree::print_inorder()
 }
 
 
-void Btree::inorder(Node *n)
+void Btree::inorder(Node* n)
 {
 	if (n != nullptr)
 	{
-		if (n->left) inorder(n->left);
+		if (n->left!=NULL) inorder(n->left);
 		cout << " " << n->key << " ";
-		if (n->right) inorder(n->right);
+		if (n->right != NULL) inorder(n->right);
 	}
 	else
 		return;
@@ -97,7 +197,7 @@ void Btree::print_preorder()
 	preorder(root);
 }
 
-void Btree::preorder(Node *n)
+void Btree::preorder(Node* n)
 {
 	if (n != nullptr)
 	{
@@ -120,7 +220,7 @@ void Btree::print_postorder()
 	postorder(root);
 }
 
-void Btree::postorder(Node *n)
+void Btree::postorder(Node* n)
 {
 	if (n != nullptr)
 	{
@@ -133,7 +233,7 @@ void Btree::postorder(Node *n)
 }
 
 //This function counts, how many nodes are in the tree.
-int Btree::countNodes(Node *n)
+int Btree::countNodes(Node* n)
 {
 	int count = 1;
 	if (n == nullptr)
@@ -152,7 +252,7 @@ int Btree::countNodes()
 }
 
 //This function counts, how many edges are in the tree.
-int Btree::countEdges(Node *n)
+int Btree::countEdges(Node* n)
 {
 	if (n == nullptr)
 		return 0;
@@ -166,7 +266,7 @@ int Btree::countEdges()
 }
 
 //This function shows the height of a tree.
-int Btree::height(Node *n)
+int Btree::height(Node* n)
 {
 	if (n == nullptr)
 	{

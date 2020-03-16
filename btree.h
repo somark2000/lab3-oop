@@ -1,14 +1,16 @@
 #pragma once
 #include "node.h"
+using namespace std;
 #include <algorithm>
 
 class Btree
 {
 	friend class Node;
 private:
-	Node* root;//radacina arborelui
+	Node* root;//radacina arborelui element fals
 	Node* left;
 	Node* right;
+
 public:
 	//constructor
 	Btree();
@@ -19,13 +21,17 @@ public:
 
 	//adds a new node to the tree
 	void insert(int key);
-	
+
 	//deletes a node
-	bool remove(int key);
+	void do_remove(int key);
+	void remove(int key,Node* n);
+
+	//searhes for the node with the smallest value
+	Node* minValueNode(Node* n);
 
 	//inorder
 	void print_inorder();
-	void inorder(Node *n);
+	void inorder(Node* n);
 
 	//preorder
 	void print_preorder();
@@ -33,17 +39,17 @@ public:
 
 	//postorder
 	void print_postorder();
-	void postorder(Node *n);
+	void postorder(Node* n);
 
 	//counts the nodes
-	int countNodes(Node *n);
+	int countNodes(Node* n);
 	int countNodes();
 
 	//counts the edges
-	int countEdges(Node *n);
+	int countEdges(Node* n);
 	int countEdges();
 
 	//returns the height of a tree
-	int height(Node *n);
+	int height(Node* n);
 	int height();
 };

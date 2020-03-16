@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "Btree.h"
+#include "btree.h"
 using namespace std;
 
 int main()
@@ -50,7 +50,7 @@ int main()
 			break;
 		case 5: cout << " Enter data to be deleted : ";
 			cin >> tmp1;
-			t.remove(tmp1);
+			t.do_remove(tmp1);
 			break;
 		case 6: cout << "Number of nodes: " << endl;
 			cout << t.countNodes() << endl;

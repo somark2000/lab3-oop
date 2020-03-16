@@ -6,7 +6,6 @@ Node::Node()
 {
 	left = NULL;
 	right = NULL;
-	father = NULL;
 }
 
 Node::~Node()
