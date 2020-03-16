@@ -8,6 +8,7 @@ private:
 	int key;//key value
 	Node* left;//son from left
 	Node* right;//son from right
+	Node* father;//the father of the node
 	int lvl;//current height of the tree
 	friend class Btree;
 

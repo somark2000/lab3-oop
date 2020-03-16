@@ -7,13 +7,15 @@ class Btree
 	friend class Node;
 private:
 	Node* root;//radacina arborelui
-	int row;//nr de niveluri
 public:
 	//constructor
 	Btree();
 
 	//destuctor
 	~Btree();
+
+	//searches a node in the three
+	bool search(int key);
 
 	//adds a new node to the tree
 	bool insert(int key,Node tree);
