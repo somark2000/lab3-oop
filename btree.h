@@ -24,7 +24,7 @@ public:
 
 	//deletes a node
 	void do_remove(int key);
-	void remove(int key,Node* n);
+	Node* remove(Node* n,int key);
 
 	//searhes for the node with the smallest value
 	Node* minValueNode(Node* n);

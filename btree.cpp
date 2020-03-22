@@ -56,11 +56,13 @@ void Btree::insert(int key)
 	}
 }
 
+//This function calls the removal of a node with a specific key value
 void Btree::do_remove(int key)
 {
-	remove(key, root);
+	remove(root,key);
 }
 
+//This function returns the the node to be put to replace the deleted one
 Node* Btree::minValueNode(Node* n)
 {
 	Node* current = n;
@@ -74,66 +76,16 @@ Node* Btree::minValueNode(Node* n)
 	return current;
 }
 
-void Btree::remove(int key,Node* n)
+//This function does the removal of a node with a specific key value
+Node* Btree::remove(Node* root, int key)
 {
-	if (root == NULL) //arborele e gol
-	{
-		cout << "The tree is empty\n";
-		return;
-	}
-	else
-	{   //cautam nodul
-		Node* current = root;
-		Node* parent = NULL;
-		while (current != NULL and key != current->key)
-		{
-			parent = current;
-			if (key > current->key)
-				current = current->right;
-			else
-				current = current->left;
-		}
-		if (key == current->key) //daca l-am gasit
-		{
-			if (current->left == NULL and current->right == NULL)//nu are copii
-			{
-				if (key < parent->key)
-					parent->left = NULL;
-				else
-					parent->right = NULL;
-				delete current;
-			}
-			else if(current->left == NULL or current->right == NULL)// are un copil
-			{
-				if (current->left == NULL)
-					parent->left = current->right;
-				else
-					parent->right = current->left;
-				delete current;
-			}
-			else
-			{
-				Node* temp = minValueNode(current->right);
-				current->key = temp->key;
-				delete temp;
-			}
-		}
-		else //nu l-am, gasit
-		{
-			cout << "There is no such element to be removed\n";
-			return;
-		}
-	}
-
-	/*
-	//cautam elementul de sters
+	if (root == NULL) return root;
 	if (key < root->key)
-		remove(key,root->left); 
+		root->left = remove(root->left, key);
 	else if (key > root->key)
-		remove(key,root->right);
+		root->right = remove(root->right, key);
 	else
 	{
-		// daca are cel mult un fiu 
 		if (root->left == NULL)
 		{
 			Node* temp = root->right;
@@ -142,23 +94,15 @@ void Btree::remove(int key,Node* n)
 		}
 		else if (root->right == NULL)
 		{
-			struct node* temp = root->left;
+			Node* temp = root->left;
 			free(root);
 			return temp;
 		}
-
-		// node with two children: Get the inorder successor (smallest 
-		// in the right subtree) 
-		struct node* temp = minValueNode(root->right);
-
-		// Copy the inorder successor's content to this node 
+		Node* temp = minValueNode(root->right);
 		root->key = temp->key;
-
-		// Delete the inorder successor 
-		root->right = deleteNode(root->right, temp->key);
-	}*/
-
-	
+		root->right = remove(root->right, temp->key);
+	}
+	return root;
 }
 
 
